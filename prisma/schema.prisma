@@ -1,0 +1,326 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------------------
+// USER & RBAC
+// --------------------------------------------------
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  phone         String?
+  password      String
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  userRoles     UserRole[]
+  auditLogs     AuditLog[]
+  transactions  FabricInventoryTransaction[]
+  garmentTrans  GarmentInventoryTransaction[]
+}
+
+model Role {
+  id            String    @id @default(cuid())
+  name          String    @unique
+  description   String?
+  
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+}
+
+model Permission {
+  id            String    @id @default(cuid())
+  name          String    @unique // e.g. "inventory.view"
+  description   String?
+  
+  rolePermissions RolePermission[]
+}
+
+model UserRole {
+  id      String @id @default(cuid())
+  userId  String
+  roleId  String
+  user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role    Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  @@unique([userId, roleId])
+}
+
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  @@unique([roleId, permissionId])
+}
+
+// --------------------------------------------------
+// MASTER DATA
+// --------------------------------------------------
+model Fabric {
+  id            String    @id @default(cuid())
+  sku           String    @unique
+  name          String
+  type          String
+  material      String
+  color         String
+  gsm           Float?
+  width         Float?
+  uom           String    @default("meters")
+  avgCost       Float?
+  supplier      String?
+  minimumStock  Float     @default(0)
+  targetDays    Int       @default(30)
+  active        Boolean   @default(true)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  rolls         FabricRoll[]
+  skus          SKU[] // SKUs that use this fabric
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  name          String
+  style         String
+  category      String
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  skus          SKU[]
+}
+
+model SKU {
+  id                  String    @id @default(cuid())
+  sku                 String    @unique
+  productId           String
+  size                String
+  color               String
+  variant             String?
+  fabricId            String
+  avgFabricConsumption Float
+  targetReadyStockDays Int      @default(15)
+  active              Boolean   @default(true)
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  product             Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  fabric              Fabric    @relation(fields: [fabricId], references: [id], onDelete: Restrict)
+  garments            Garment[]
+  cuttingBatches      CuttingBatch[]
+  transactions        GarmentInventoryTransaction[]
+}
+
+model Fabricator {
+  id            String    @id @default(cuid())
+  name          String
+  contactPerson String?
+  phone         String?
+  address       String?
+  active        Boolean   @default(true)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  challans      Challan[]
+}
+
+// --------------------------------------------------
+// FABRIC INVENTORY
+// --------------------------------------------------
+model FabricRoll {
+  id              String    @id @default(cuid())
+  rollId          String    @unique // e.g. ROLL-0001
+  barcode         String    @unique
+  fabricId        String
+  batchLot        String?
+  supplier        String?
+  originalQty     Float
+  currentQty      Float
+  status          String    @default("AVAILABLE") // AVAILABLE, PARTIALLY_ISSUED, ISSUED, IN_CUTTING, CONSUMED, DAMAGED, CLOSED
+  location        String?
+  cost            Float?
+  notes           String?
+  purchaseDate    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  fabric          Fabric    @relation(fields: [fabricId], references: [id], onDelete: Restrict)
+  transactions    FabricInventoryTransaction[]
+  cuttingRolls    CuttingBatchRoll[]
+}
+
+model FabricInventoryTransaction {
+  id            String    @id @default(cuid())
+  rollId        String
+  type          String    // RECEIPT, ISSUE, ADJUSTMENT, CONSUMPTION
+  qtyChange     Float
+  beforeQty     Float
+  afterQty      Float
+  referenceId   String?   // e.g. CuttingBatch ID
+  userId        String?
+  notes         String?
+  timestamp     DateTime  @default(now())
+
+  roll          FabricRoll @relation(fields: [rollId], references: [id], onDelete: Restrict)
+  user          User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+// --------------------------------------------------
+// PRODUCTION: CUTTING
+// --------------------------------------------------
+model CuttingBatch {
+  id            String    @id @default(cuid())
+  batchId       String    @unique // e.g. CUT-001
+  skuId         String
+  expectedQty   Int
+  actualQty     Int?
+  cutter        String?
+  cuttingMaster String?
+  status        String    @default("PLANNED") // PLANNED, IN_PROGRESS, COMPLETED, CANCELLED
+  notes         String?
+  date          DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sku           SKU       @relation(fields: [skuId], references: [id], onDelete: Restrict)
+  rolls         CuttingBatchRoll[]
+  garments      Garment[]
+  challans      Challan[]
+}
+
+model CuttingBatchRoll {
+  id              String    @id @default(cuid())
+  cuttingBatchId  String
+  rollId          String
+  qtyIssued       Float
+
+  cuttingBatch    CuttingBatch @relation(fields: [cuttingBatchId], references: [id], onDelete: Cascade)
+  roll            FabricRoll   @relation(fields: [rollId], references: [id], onDelete: Restrict)
+}
+
+// --------------------------------------------------
+// GARMENT INVENTORY & TRACEABILITY
+// --------------------------------------------------
+model Garment {
+  id              String    @id @default(cuid())
+  garmentId       String    @unique // e.g. GAR-000001
+  barcode         String    @unique
+  skuId           String
+  cuttingBatchId  String
+  status          String    @default("CUT") // CUT, WITH_FABRICATOR, RECEIVED, CHECKING, FINISHING, QC, PACKED, FINAL_INVENTORY, SOLD
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sku             SKU       @relation(fields: [skuId], references: [id], onDelete: Restrict)
+  cuttingBatch    CuttingBatch @relation(fields: [cuttingBatchId], references: [id], onDelete: Restrict)
+  challanItems    ChallanItem[]
+  statusHistory   GarmentStatusHistory[]
+}
+
+model GarmentStatusHistory {
+  id            String    @id @default(cuid())
+  garmentId     String
+  status        String
+  userId        String?
+  location      String?
+  remarks       String?
+  timestamp     DateTime  @default(now())
+
+  garment       Garment   @relation(fields: [garmentId], references: [id], onDelete: Cascade)
+}
+
+model GarmentInventoryTransaction {
+  id            String    @id @default(cuid())
+  skuId         String
+  type          String    // GARMENT_CREATED, SALE, ADJUSTMENT
+  qtyChange     Int
+  beforeQty     Int
+  afterQty      Int
+  referenceId   String?   // e.g. Shopify Order ID
+  userId        String?
+  notes         String?
+  timestamp     DateTime  @default(now())
+
+  sku           SKU       @relation(fields: [skuId], references: [id], onDelete: Restrict)
+  user          User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+// --------------------------------------------------
+// FABRICATOR & CHALLANS
+// --------------------------------------------------
+model Challan {
+  id              String    @id @default(cuid())
+  challanNumber   String    @unique
+  fabricatorId    String
+  cuttingBatchId  String
+  expectedQty     Int
+  receivedQty     Int       @default(0)
+  status          String    @default("DRAFT") // DRAFT, ISSUED, PARTIALLY_RECEIVED, RECEIVED, CLOSED, CANCELLED
+  issuedById      String?
+  notes           String?
+  date            DateTime  @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  fabricator      Fabricator @relation(fields: [fabricatorId], references: [id], onDelete: Restrict)
+  cuttingBatch    CuttingBatch @relation(fields: [cuttingBatchId], references: [id], onDelete: Restrict)
+  items           ChallanItem[]
+}
+
+model ChallanItem {
+  id            String    @id @default(cuid())
+  challanId     String
+  garmentId     String
+  status        String    @default("ISSUED") // ISSUED, RECEIVED, LOST
+  receivedAt    DateTime?
+
+  challan       Challan   @relation(fields: [challanId], references: [id], onDelete: Cascade)
+  garment       Garment   @relation(fields: [garmentId], references: [id], onDelete: Restrict)
+  @@unique([challanId, garmentId])
+}
+
+// --------------------------------------------------
+// SHOPIFY INTEGRATION
+// --------------------------------------------------
+model ShopifyWebhookEvent {
+  id            String    @id // Shopify webhook ID
+  eventType     String
+  processedAt   DateTime  @default(now())
+  status        String    @default("PROCESSED") // PROCESSED, FAILED
+  payload       String?
+}
+
+// --------------------------------------------------
+// SYSTEM AUDIT & SETTINGS
+// --------------------------------------------------
+model AuditLog {
+  id            String   @id @default(cuid())
+  eventType     String
+  entityType    String
+  entityId      String
+  userId        String?
+  previousState String?
+  newState      String?
+  metadata      String?
+  timestamp     DateTime @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
