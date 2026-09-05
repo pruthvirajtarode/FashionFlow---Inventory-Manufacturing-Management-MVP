@@ -4,15 +4,15 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
 }
 
 // --------------------------------------------------
 // USER & RBAC
 // --------------------------------------------------
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
   email         String    @unique
   phone         String?
@@ -28,7 +28,7 @@ model User {
 }
 
 model Role {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String    @unique
   description   String?
   
@@ -37,26 +37,26 @@ model Role {
 }
 
 model Permission {
-  id            String    @id @default(cuid())
-  name          String    @unique // e.g. "inventory.view"
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String    @unique
   description   String?
   
   rolePermissions RolePermission[]
 }
 
 model UserRole {
-  id      String @id @default(cuid())
-  userId  String
-  roleId  String
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String @db.ObjectId
+  roleId  String @db.ObjectId
   user    User @relation(fields: [userId], references: [id], onDelete: Cascade)
   role    Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
   @@unique([userId, roleId])
 }
 
 model RolePermission {
-  id           String @id @default(cuid())
-  roleId       String
-  permissionId String
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  roleId       String @db.ObjectId
+  permissionId String @db.ObjectId
   role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
   permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
   @@unique([roleId, permissionId])
@@ -66,7 +66,7 @@ model RolePermission {
 // MASTER DATA
 // --------------------------------------------------
 model Fabric {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   sku           String    @unique
   name          String
   type          String
@@ -85,11 +85,11 @@ model Fabric {
   updatedAt     DateTime  @updatedAt
 
   rolls         FabricRoll[]
-  skus          SKU[] // SKUs that use this fabric
+  skus          SKU[]
 }
 
 model Product {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   style         String
   category      String
@@ -101,13 +101,13 @@ model Product {
 }
 
 model SKU {
-  id                  String    @id @default(cuid())
+  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
   sku                 String    @unique
-  productId           String
+  productId           String    @db.ObjectId
   size                String
   color               String
   variant             String?
-  fabricId            String
+  fabricId            String    @db.ObjectId
   avgFabricConsumption Float
   targetReadyStockDays Int      @default(15)
   active              Boolean   @default(true)
@@ -123,7 +123,7 @@ model SKU {
 }
 
 model Fabricator {
-  id            String    @id @default(cuid())
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   contactPerson String?
   phone         String?
@@ -140,15 +140,15 @@ model Fabricator {
 // FABRIC INVENTORY
 // --------------------------------------------------
 model FabricRoll {
-  id              String    @id @default(cuid())
-  rollId          String    @unique // e.g. ROLL-0001
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  rollId          String    @unique 
   barcode         String    @unique
-  fabricId        String
+  fabricId        String    @db.ObjectId
   batchLot        String?
   supplier        String?
   originalQty     Float
   currentQty      Float
-  status          String    @default("AVAILABLE") // AVAILABLE, PARTIALLY_ISSUED, ISSUED, IN_CUTTING, CONSUMED, DAMAGED, CLOSED
+  status          String    @default("AVAILABLE") 
   location        String?
   cost            Float?
   notes           String?
@@ -162,14 +162,14 @@ model FabricRoll {
 }
 
 model FabricInventoryTransaction {
-  id            String    @id @default(cuid())
-  rollId        String
-  type          String    // RECEIPT, ISSUE, ADJUSTMENT, CONSUMPTION
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  rollId        String    @db.ObjectId
+  type          String    
   qtyChange     Float
   beforeQty     Float
   afterQty      Float
-  referenceId   String?   // e.g. CuttingBatch ID
-  userId        String?
+  referenceId   String?   
+  userId        String?   @db.ObjectId
   notes         String?
   timestamp     DateTime  @default(now())
 
@@ -181,14 +181,14 @@ model FabricInventoryTransaction {
 // PRODUCTION: CUTTING
 // --------------------------------------------------
 model CuttingBatch {
-  id            String    @id @default(cuid())
-  batchId       String    @unique // e.g. CUT-001
-  skuId         String
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  batchId       String    @unique 
+  skuId         String    @db.ObjectId
   expectedQty   Int
   actualQty     Int?
   cutter        String?
   cuttingMaster String?
-  status        String    @default("PLANNED") // PLANNED, IN_PROGRESS, COMPLETED, CANCELLED
+  status        String    @default("PLANNED") 
   notes         String?
   date          DateTime  @default(now())
   createdAt     DateTime  @default(now())
@@ -201,9 +201,9 @@ model CuttingBatch {
 }
 
 model CuttingBatchRoll {
-  id              String    @id @default(cuid())
-  cuttingBatchId  String
-  rollId          String
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  cuttingBatchId  String    @db.ObjectId
+  rollId          String    @db.ObjectId
   qtyIssued       Float
 
   cuttingBatch    CuttingBatch @relation(fields: [cuttingBatchId], references: [id], onDelete: Cascade)
@@ -214,12 +214,12 @@ model CuttingBatchRoll {
 // GARMENT INVENTORY & TRACEABILITY
 // --------------------------------------------------
 model Garment {
-  id              String    @id @default(cuid())
-  garmentId       String    @unique // e.g. GAR-000001
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  garmentId       String    @unique 
   barcode         String    @unique
-  skuId           String
-  cuttingBatchId  String
-  status          String    @default("CUT") // CUT, WITH_FABRICATOR, RECEIVED, CHECKING, FINISHING, QC, PACKED, FINAL_INVENTORY, SOLD
+  skuId           String    @db.ObjectId
+  cuttingBatchId  String    @db.ObjectId
+  status          String    @default("CUT") 
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -230,10 +230,10 @@ model Garment {
 }
 
 model GarmentStatusHistory {
-  id            String    @id @default(cuid())
-  garmentId     String
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  garmentId     String    @db.ObjectId
   status        String
-  userId        String?
+  userId        String?   @db.ObjectId
   location      String?
   remarks       String?
   timestamp     DateTime  @default(now())
@@ -242,14 +242,14 @@ model GarmentStatusHistory {
 }
 
 model GarmentInventoryTransaction {
-  id            String    @id @default(cuid())
-  skuId         String
-  type          String    // GARMENT_CREATED, SALE, ADJUSTMENT
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  skuId         String    @db.ObjectId
+  type          String    
   qtyChange     Int
   beforeQty     Int
   afterQty      Int
-  referenceId   String?   // e.g. Shopify Order ID
-  userId        String?
+  referenceId   String?   
+  userId        String?   @db.ObjectId
   notes         String?
   timestamp     DateTime  @default(now())
 
@@ -261,14 +261,14 @@ model GarmentInventoryTransaction {
 // FABRICATOR & CHALLANS
 // --------------------------------------------------
 model Challan {
-  id              String    @id @default(cuid())
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
   challanNumber   String    @unique
-  fabricatorId    String
-  cuttingBatchId  String
+  fabricatorId    String    @db.ObjectId
+  cuttingBatchId  String    @db.ObjectId
   expectedQty     Int
   receivedQty     Int       @default(0)
-  status          String    @default("DRAFT") // DRAFT, ISSUED, PARTIALLY_RECEIVED, RECEIVED, CLOSED, CANCELLED
-  issuedById      String?
+  status          String    @default("DRAFT") 
+  issuedById      String?   @db.ObjectId
   notes           String?
   date            DateTime  @default(now())
   createdAt       DateTime  @default(now())
@@ -280,10 +280,10 @@ model Challan {
 }
 
 model ChallanItem {
-  id            String    @id @default(cuid())
-  challanId     String
-  garmentId     String
-  status        String    @default("ISSUED") // ISSUED, RECEIVED, LOST
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  challanId     String    @db.ObjectId
+  garmentId     String    @db.ObjectId
+  status        String    @default("ISSUED") 
   receivedAt    DateTime?
 
   challan       Challan   @relation(fields: [challanId], references: [id], onDelete: Cascade)
@@ -295,10 +295,10 @@ model ChallanItem {
 // SHOPIFY INTEGRATION
 // --------------------------------------------------
 model ShopifyWebhookEvent {
-  id            String    @id // Shopify webhook ID
+  id            String    @id @map("_id") // Strings allowed as IDs if using map("_id")
   eventType     String
   processedAt   DateTime  @default(now())
-  status        String    @default("PROCESSED") // PROCESSED, FAILED
+  status        String    @default("PROCESSED") 
   payload       String?
 }
 
@@ -306,11 +306,11 @@ model ShopifyWebhookEvent {
 // SYSTEM AUDIT & SETTINGS
 // --------------------------------------------------
 model AuditLog {
-  id            String   @id @default(cuid())
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   eventType     String
   entityType    String
   entityId      String
-  userId        String?
+  userId        String?  @db.ObjectId
   previousState String?
   newState      String?
   metadata      String?
@@ -320,7 +320,7 @@ model AuditLog {
 }
 
 model SystemSetting {
-  id    String @id @default(cuid())
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
   key   String @unique
   value String
 }
