@@ -1,9 +1,13 @@
+"use client"
+
 import Link from 'next/link'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { 
   LayoutDashboard, Package, Shirt, Scissors, Truck,
   CheckSquare, CheckCircle, PackageCheck, FileText,
-  BarChart, Users, Settings, Activity, ShoppingCart
+  BarChart, Users, Settings, Activity, ShoppingCart, Menu
 } from 'lucide-react'
 
 const routes = [
@@ -60,24 +64,57 @@ const routes = [
 ]
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
   return (
-    <div className="flex flex-col h-full bg-slate-950 text-slate-300 w-64 flex-shrink-0 border-r border-slate-800">
-      <div className="p-4 flex items-center gap-2 border-b border-slate-800">
-        <div className="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold">FF</div>
-        <span className="text-xl font-bold text-white tracking-tight">FashionFlow</span>
+    <div className={cn(
+      "flex flex-col h-full bg-slate-950 text-slate-300 flex-shrink-0 border-r border-slate-800 transition-all duration-300",
+      isCollapsed ? "w-16" : "w-64"
+    )}>
+      <div className={cn(
+        "p-4 flex items-center border-b border-slate-800",
+        isCollapsed ? "justify-center" : "justify-between"
+      )}>
+        <div className="flex items-center gap-2 overflow-hidden">
+          <div className="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold shrink-0">FF</div>
+          {!isCollapsed && <span className="text-xl font-bold text-white tracking-tight whitespace-nowrap">FashionFlow</span>}
+        </div>
+        {!isCollapsed && (
+          <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white" onClick={() => setIsCollapsed(true)}>
+            <Menu className="h-5 w-5" />
+          </Button>
+        )}
       </div>
-      <div className="flex-1 overflow-y-auto py-4">
+      
+      {isCollapsed && (
+        <div className="flex justify-center p-2 border-b border-slate-800">
+          <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white" onClick={() => setIsCollapsed(false)}>
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
+      )}
+
+      <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 custom-scrollbar">
         {routes.map((group, idx) => (
-          <div key={idx} className="mb-6 px-3">
-            <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {group.heading}
-            </h3>
+          <div key={idx} className="mb-6 px-2">
+            {!isCollapsed && (
+              <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500 whitespace-nowrap">
+                {group.heading}
+              </h3>
+            )}
             <div className="space-y-1">
               {group.items.map((item, i) => (
                 <Link key={i} href={item.path} onClick={onNavigate}>
-                  <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800">
-                    <item.icon className="mr-2 h-4 w-4" />
-                    {item.name}
+                  <Button 
+                    variant="ghost" 
+                    className={cn(
+                      "w-full text-slate-400 hover:text-white hover:bg-slate-800",
+                      isCollapsed ? "justify-center px-0" : "justify-start px-3"
+                    )}
+                    title={isCollapsed ? item.name : undefined}
+                  >
+                    <item.icon className={cn("h-4 w-4 shrink-0", !isCollapsed && "mr-3")} />
+                    {!isCollapsed && <span className="truncate">{item.name}</span>}
                   </Button>
                 </Link>
               ))}
