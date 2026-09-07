@@ -14,10 +14,12 @@ export function Header() {
     <header className="h-16 border-b bg-white flex items-center justify-between px-4 lg:px-6 shadow-sm sticky top-0 z-40">
       <div className="flex items-center gap-4">
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-5 w-5" />
-            </Button>
+          <SheetTrigger 
+            render={
+              <Button variant="ghost" size="icon" className="lg:hidden" />
+            }
+          >
+            <Menu className="h-5 w-5" />
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64">
             <div className="sr-only">
