@@ -1,5 +1,5 @@
 import { getFabricRolls } from "@/actions/inventory"
-import { Button } from "@/components/ui/button"
+import { DemoToastButton } from "@/components/ui/demo-toast-button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -18,8 +18,8 @@ export default async function FabricInventoryPage() {
           <p className="text-muted-foreground">Manage and track individual fabric rolls in stock.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline"><Filter className="mr-2 h-4 w-4" /> Filter</Button>
-          <Button><Plus className="mr-2 h-4 w-4" /> Receive Roll</Button>
+          <DemoToastButton variant="outline" featureName="Filters"><Filter className="mr-2 h-4 w-4" /> Filter</DemoToastButton>
+          <DemoToastButton featureName="Receive Roll"><Plus className="mr-2 h-4 w-4" /> Receive Roll</DemoToastButton>
         </div>
       </div>
 

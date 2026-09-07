@@ -1,10 +1,11 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { DemoToastButton } from "@/components/ui/demo-toast-button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Filter, Download } from "lucide-react"
+import { toast } from "sonner"
 
 export function MockPageTemplate({ 
   title, 
@@ -27,8 +28,8 @@ export function MockPageTemplate({
           <p className="text-muted-foreground">{description}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline"><Download className="mr-2 h-4 w-4" /> Export</Button>
-          <Button><Plus className="mr-2 h-4 w-4" /> {primaryAction}</Button>
+          <DemoToastButton variant="outline" featureName="Export to CSV"><Download className="mr-2 h-4 w-4" /> Export</DemoToastButton>
+          <DemoToastButton featureName={primaryAction}><Plus className="mr-2 h-4 w-4" /> {primaryAction}</DemoToastButton>
         </div>
       </div>
 
@@ -38,9 +39,9 @@ export function MockPageTemplate({
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="Search records..." className="pl-8" />
           </div>
-          <Button variant="outline" size="sm" className="hidden sm:flex">
+          <DemoToastButton variant="outline" size="sm" className="hidden sm:flex" featureName="Filters">
             <Filter className="mr-2 h-4 w-4" /> Filter
-          </Button>
+          </DemoToastButton>
         </div>
         <div className="relative w-full overflow-auto">
           <Table>
@@ -53,7 +54,9 @@ export function MockPageTemplate({
             </TableHeader>
             <TableBody>
               {data.map((row, i) => (
-                <TableRow key={i} className="hover:bg-slate-50/50 cursor-pointer transition-colors">
+                <TableRow key={i} className="hover:bg-slate-50/50 cursor-pointer transition-colors" onClick={() => {
+                  toast("Record Details", { description: "Opening detail view for this record is not available in the demo." })
+                }}>
                   {row.map((cell, j) => (
                     <TableCell key={j}>
                       {typeof cell === 'string' && (cell === 'ACTIVE' || cell === 'PASSED' || cell === 'COMPLETED' || cell === 'DELIVERED') ? (
@@ -77,8 +80,8 @@ export function MockPageTemplate({
         <div className="p-4 border-t text-sm text-muted-foreground flex justify-between items-center">
           <span>Showing 1 to {data.length} of {data.length + 42} records</span>
           <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled>Previous</Button>
-            <Button variant="outline" size="sm">Next</Button>
+            <DemoToastButton variant="outline" size="sm" disabled featureName="Pagination">Previous</DemoToastButton>
+            <DemoToastButton variant="outline" size="sm" featureName="Pagination">Next</DemoToastButton>
           </div>
         </div>
       </div>
