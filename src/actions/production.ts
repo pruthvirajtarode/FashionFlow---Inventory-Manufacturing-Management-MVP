@@ -86,7 +86,7 @@ export async function getBarcodeTrace(barcode: string) {
     include: {
       sku: { include: { product: true } },
       cuttingBatch: { include: { rolls: { include: { roll: { include: { fabric: true } } } } } },
-      statusHistory: { orderBy: { timestamp: 'asc' }, include: { user: true } },
+      statusHistory: { orderBy: { timestamp: 'asc' } },
       challanItems: { include: { challan: { include: { fabricator: true } } } }
     }
   })

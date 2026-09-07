@@ -3,14 +3,15 @@ import { BarcodeLabel } from "@/components/ui/barcode-label"
 import { Button } from "@/components/ui/button"
 import { Printer } from "lucide-react"
 import { useSearchParams } from "next/navigation"
+import { Suspense } from "react"
 
-export default function PrintBarcodesPage() {
+function PrintBarcodesContent() {
   const searchParams = useSearchParams()
   const idsParam = searchParams.get('ids')
   const ids = idsParam ? idsParam.split(',') : ["GAR-000001", "GAR-000002", "GAR-000003"]
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <>
       <div className="mb-8 print:hidden flex justify-between items-center">
         <h1 className="text-2xl font-bold">Print Labels</h1>
         <Button onClick={() => window.print()}>
@@ -23,6 +24,16 @@ export default function PrintBarcodesPage() {
           <BarcodeLabel key={id} value={id} title="FashionFlow" subtitle="Garment Tag" />
         ))}
       </div>
+    </>
+  )
+}
+
+export default function PrintBarcodesPage() {
+  return (
+    <div className="p-8 bg-white min-h-screen">
+      <Suspense fallback={<div>Loading barcodes...</div>}>
+        <PrintBarcodesContent />
+      </Suspense>
     </div>
   )
 }
