@@ -39,13 +39,30 @@ export async function getDashboardMetrics() {
       { id: '5', eventType: 'RECEIVED', entityType: 'Inventory', metadata: '500m of Cotton Canvas received', timestamp: new Date(Date.now() - 86400000) },
     ]
 
+    const categoryDistribution = [
+      { name: 'T-Shirts', value: 4500 },
+      { name: 'Jackets', value: 2100 },
+      { name: 'Pants', value: 1800 },
+      { name: 'Accessories', value: 524 },
+    ]
+
+    const fabricStock = [
+      { name: 'Denim', stock: 1200 },
+      { name: 'Cotton', stock: 3500 },
+      { name: 'Linen', stock: 800 },
+      { name: 'Polyester', stock: 2200 },
+      { name: 'Silk', stock: 300 },
+    ]
+
     return {
       totalFabrics: totalFabrics || 124,
       activeBatches: activeBatches || 12,
       garmentsInQC: garmentsInQC || 432,
       totalGarments: totalGarments || 8924,
       trends: defaultTrends,
-      recentActivity: recentActivity.length > 0 ? recentActivity : mockActivity
+      recentActivity: recentActivity.length > 0 ? recentActivity : mockActivity,
+      categoryDistribution,
+      fabricStock
     }
   } catch (error) {
     console.error("Dashboard metrics error:", error)
@@ -71,13 +88,30 @@ export async function getDashboardMetrics() {
       { id: '5', eventType: 'RECEIVED', entityType: 'Inventory', metadata: '500m of Cotton Canvas received', timestamp: new Date(Date.now() - 86400000) },
     ]
 
+    const categoryDistribution = [
+      { name: 'T-Shirts', value: 4500 },
+      { name: 'Jackets', value: 2100 },
+      { name: 'Pants', value: 1800 },
+      { name: 'Accessories', value: 524 },
+    ]
+
+    const fabricStock = [
+      { name: 'Denim', stock: 1200 },
+      { name: 'Cotton', stock: 3500 },
+      { name: 'Linen', stock: 800 },
+      { name: 'Polyester', stock: 2200 },
+      { name: 'Silk', stock: 300 },
+    ]
+
     return {
       totalFabrics: 124,
       activeBatches: 12,
       garmentsInQC: 432,
       totalGarments: 8924,
       trends: defaultTrends,
-      recentActivity: mockActivity
+      recentActivity: mockActivity,
+      categoryDistribution,
+      fabricStock
     }
   }
 }

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Shirt, Package, Scissors, CheckCircle, Activity, ArrowRight, ArrowUpRight } from "lucide-react"
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, PieChart, Pie, Cell, Legend } from "recharts"
 import { motion } from "framer-motion"
 
 export default function DashboardView({ metrics }: { metrics: any }) {
@@ -175,6 +175,78 @@ export default function DashboardView({ metrics }: { metrics: any }) {
                     </div>
                   </div>
                 ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* NEW CHARTS ROW */}
+      <div className="grid gap-6 md:grid-cols-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ delay: 0.6 }}
+        >
+          <Card className="shadow-md border-slate-100">
+            <CardHeader>
+              <CardTitle>Garment Distribution</CardTitle>
+              <CardDescription>Breakdown by product category.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={metrics.categoryDistribution}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {metrics.categoryDistribution?.map((entry: any, index: number) => {
+                        const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+                        return <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />;
+                      })}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      itemStyle={{ color: '#1e293b', fontWeight: 500 }}
+                    />
+                    <Legend verticalAlign="bottom" height={36} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ delay: 0.7 }}
+        >
+          <Card className="shadow-md border-slate-100">
+            <CardHeader>
+              <CardTitle>Fabric Stock Levels</CardTitle>
+              <CardDescription>Current inventory in meters by material.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={metrics.fabricStock} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      cursor={{fill: 'transparent'}}
+                    />
+                    <Bar dataKey="stock" fill="#10b981" radius={[4, 4, 0, 0]} barSize={40} />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
