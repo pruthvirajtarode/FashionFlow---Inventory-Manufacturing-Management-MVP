@@ -6,7 +6,6 @@ import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Sidebar } from "@/components/layout/sidebar"
 import * as React from "react"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 
 export function Header() {
   const [open, setOpen] = React.useState(false)
@@ -21,10 +20,10 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64">
-            <VisuallyHidden>
+            <div className="sr-only">
               <SheetTitle>Navigation Menu</SheetTitle>
               <SheetDescription>Access all modules of the application.</SheetDescription>
-            </VisuallyHidden>
+            </div>
             <Sidebar onNavigate={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
