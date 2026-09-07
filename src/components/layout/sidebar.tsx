@@ -59,7 +59,7 @@ const routes = [
   }
 ]
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex flex-col h-full bg-slate-950 text-slate-300 w-64 flex-shrink-0 border-r border-slate-800">
       <div className="p-4 flex items-center gap-2 border-b border-slate-800">
@@ -74,7 +74,7 @@ export function Sidebar() {
             </h3>
             <div className="space-y-1">
               {group.items.map((item, i) => (
-                <Link key={i} href={item.path}>
+                <Link key={i} href={item.path} onClick={onNavigate}>
                   <Button variant="ghost" className="w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800">
                     <item.icon className="mr-2 h-4 w-4" />
                     {item.name}
