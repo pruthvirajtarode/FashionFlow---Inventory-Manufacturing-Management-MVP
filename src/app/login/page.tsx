@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -14,6 +14,11 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    // Automatically seed the database in the background so the user can log in
+    fetch('/api/seed').catch(console.error)
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
