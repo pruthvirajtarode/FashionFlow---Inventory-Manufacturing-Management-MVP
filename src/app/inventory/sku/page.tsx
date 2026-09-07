@@ -1,13 +1,54 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function SkuPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Sku (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="SKU Master"
+      description="Manage product variants, BOM mapping, and standard sizing."
+      primaryAction="Create SKU"
+      columns={["SKU Code","Product Name","Category","Color/Size","Target Stock","Status"]}
+      data={[
+  [
+    "TS-BLU-L",
+    "Classic Crewneck Tee",
+    "T-Shirts",
+    "BADGE:Navy Blue / L",
+    "500 units",
+    "ACTIVE"
+  ],
+  [
+    "TS-BLU-M",
+    "Classic Crewneck Tee",
+    "T-Shirts",
+    "BADGE:Navy Blue / M",
+    "750 units",
+    "ACTIVE"
+  ],
+  [
+    "TS-RED-S",
+    "Classic Crewneck Tee",
+    "T-Shirts",
+    "BADGE:Crimson / S",
+    "300 units",
+    "ACTIVE"
+  ],
+  [
+    "JK-BLK-XL",
+    "Winter Bomber Jacket",
+    "Jackets",
+    "BADGE:Obsidian / XL",
+    "150 units",
+    "ACTIVE"
+  ],
+  [
+    "PN-KHK-32",
+    "Chino Trousers",
+    "Pants",
+    "BADGE:Khaki / 32",
+    "400 units",
+    "ACTIVE"
+  ]
+]}
+    />
   )
 }

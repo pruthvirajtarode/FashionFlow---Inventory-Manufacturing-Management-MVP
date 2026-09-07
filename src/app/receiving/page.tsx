@@ -1,13 +1,38 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function ReceivingPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Receiving (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Receiving (Inward)"
+      description="Log inward shipments of stitched garments from fabricators."
+      primaryAction="New Receipt"
+      columns={["Receipt ID","Ref Challan","Fabricator","Received Qty","Shortage/Excess","Status"]}
+      data={[
+  [
+    "RCV-9901",
+    "CH-2026-8802",
+    "StitchPerfect Inc",
+    "198 pcs",
+    "BADGE:-2 pcs",
+    "COMPLETED"
+  ],
+  [
+    "RCV-9902",
+    "CH-2026-8804",
+    "Apex Garments Ltd",
+    "150 pcs",
+    "BADGE:0 pcs",
+    "COMPLETED"
+  ],
+  [
+    "RCV-9903",
+    "CH-2026-8790",
+    "Global Textiles",
+    "405 pcs",
+    "BADGE:+5 pcs",
+    "COMPLETED"
+  ]
+]}
+    />
   )
 }

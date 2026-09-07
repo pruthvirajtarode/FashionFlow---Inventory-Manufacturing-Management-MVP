@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function PackingPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Packing (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Packing & Dispatch Prep"
+      description="Group individual garments into cartons for inventory."
+      primaryAction="Create Carton"
+      columns={["Carton ID","SKU","Units Packed","Weight (kg)","Destination","Status"]}
+      data={[
+  [
+    "BOX-00124",
+    "TS-BLU-L",
+    "50",
+    "12.5",
+    "Main Warehouse",
+    "COMPLETED"
+  ],
+  [
+    "BOX-00125",
+    "TS-RED-S",
+    "50",
+    "12.0",
+    "Main Warehouse",
+    "COMPLETED"
+  ],
+  [
+    "BOX-00126",
+    "JK-BLK-XL",
+    "20",
+    "18.2",
+    "Retail Store #1",
+    "TRANSIT"
+  ],
+  [
+    "BOX-00127",
+    "PN-KHK-32",
+    "35",
+    "-",
+    "Pending assignment",
+    "IN PROGRESS"
+  ]
+]}
+    />
   )
 }

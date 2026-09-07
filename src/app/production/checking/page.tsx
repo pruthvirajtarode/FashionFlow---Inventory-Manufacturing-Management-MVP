@@ -1,13 +1,38 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function CheckingPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Checking (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Checking & Inspection"
+      description="Initial inspection of garments received from stitching."
+      primaryAction="Scan Batch"
+      columns={["Batch Ref","SKU","Total Received","Checked Qty","Passed","Status"]}
+      data={[
+  [
+    "CB-2024-08",
+    "TS-BLU-L",
+    "500",
+    "500",
+    "495",
+    "COMPLETED"
+  ],
+  [
+    "CB-2024-09",
+    "TS-RED-S",
+    "300",
+    "150",
+    "148",
+    "IN PROGRESS"
+  ],
+  [
+    "CB-2024-10",
+    "JK-BLK-XL",
+    "150",
+    "0",
+    "0",
+    "PENDING"
+  ]
+]}
+    />
   )
 }

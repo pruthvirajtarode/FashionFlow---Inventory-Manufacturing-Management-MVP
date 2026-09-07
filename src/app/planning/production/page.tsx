@@ -1,13 +1,38 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function ProductionPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Production (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Production Planning"
+      description="Forecast demand and schedule cutting batches."
+      primaryAction="New Forecast"
+      columns={["Plan ID","Target SKU","Required By","Planned Qty","Assigned Fabric","Status"]}
+      data={[
+  [
+    "PLAN-Q4-01",
+    "TS-BLU-L",
+    "Nov 15, 2026",
+    "2000",
+    "ROLL-0042",
+    "ACTIVE"
+  ],
+  [
+    "PLAN-Q4-02",
+    "JK-BLK-XL",
+    "Dec 01, 2026",
+    "500",
+    "Pending Allocation",
+    "PENDING"
+  ],
+  [
+    "PLAN-Q3-99",
+    "TS-RED-S",
+    "Oct 01, 2026",
+    "1500",
+    "ROLL-0021",
+    "COMPLETED"
+  ]
+]}
+    />
   )
 }

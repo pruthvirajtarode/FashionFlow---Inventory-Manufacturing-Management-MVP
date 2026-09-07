@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function FabricatorsPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Fabricators (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Fabricators & Vendors"
+      description="Manage third-party stitching units and external vendors."
+      primaryAction="Add Fabricator"
+      columns={["Fabricator Name","Contact Person","Phone","Active Jobs","Rating","Status"]}
+      data={[
+  [
+    "Apex Garments Ltd",
+    "Rajiv Sharma",
+    "+91 98765 43210",
+    "BADGE:3 active challans",
+    "4.8/5",
+    "ACTIVE"
+  ],
+  [
+    "StitchPerfect Inc",
+    "Amit Patel",
+    "+91 98765 11111",
+    "BADGE:1 active challan",
+    "4.5/5",
+    "ACTIVE"
+  ],
+  [
+    "Global Textiles",
+    "Sarah Khan",
+    "+91 98765 22222",
+    "BADGE:0 active challans",
+    "3.9/5",
+    "ACTIVE"
+  ],
+  [
+    "City Threads",
+    "Vikram Singh",
+    "+91 98765 33333",
+    "BADGE:5 active challans",
+    "4.9/5",
+    "ACTIVE"
+  ]
+]}
+    />
   )
 }

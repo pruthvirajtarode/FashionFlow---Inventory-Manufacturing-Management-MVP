@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function ShopifyPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Shopify (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Shopify Integration"
+      description="Sync inventory levels and pull online orders automatically."
+      primaryAction="Force Sync Now"
+      columns={["Sync ID","Event Type","Items Affected","Triggered By","Sync Time","Status"]}
+      data={[
+  [
+    "SYNC-8821",
+    "Inventory Update",
+    "45 SKUs",
+    "Automated (Hourly)",
+    "10 mins ago",
+    "COMPLETED"
+  ],
+  [
+    "SYNC-8820",
+    "Order Import",
+    "12 Orders",
+    "Webhook",
+    "45 mins ago",
+    "COMPLETED"
+  ],
+  [
+    "SYNC-8819",
+    "Product Catalog",
+    "1 SKU",
+    "Manual (Admin)",
+    "2 hours ago",
+    "FAILED"
+  ],
+  [
+    "SYNC-8818",
+    "Inventory Update",
+    "45 SKUs",
+    "Automated (Hourly)",
+    "3 hours ago",
+    "COMPLETED"
+  ]
+]}
+    />
   )
 }

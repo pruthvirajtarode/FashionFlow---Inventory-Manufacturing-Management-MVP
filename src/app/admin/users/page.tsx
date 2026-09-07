@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function UsersPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Users (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="User Management"
+      description="Manage employee access and credentials."
+      primaryAction="Add User"
+      columns={["Name","Email","Role","Department","Last Login","Status"]}
+      data={[
+  [
+    "Pruthviraj Tarode",
+    "admin@fashionflow.com",
+    "Super Admin",
+    "Management",
+    "Just now",
+    "ACTIVE"
+  ],
+  [
+    "Amit Sharma",
+    "amit@fashionflow.com",
+    "Production Manager",
+    "Production",
+    "2 hours ago",
+    "ACTIVE"
+  ],
+  [
+    "Sarah Connor",
+    "sarah@fashionflow.com",
+    "QC Inspector",
+    "Quality",
+    "1 day ago",
+    "ACTIVE"
+  ],
+  [
+    "John Doe",
+    "john@fashionflow.com",
+    "Warehouse Staff",
+    "Inventory",
+    "5 days ago",
+    "FAILED"
+  ]
+]}
+    />
   )
 }

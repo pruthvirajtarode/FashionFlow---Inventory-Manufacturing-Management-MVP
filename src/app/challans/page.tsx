@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function ChallansPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Challans (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Challan Management"
+      description="Track materials sent to and received from external fabricators."
+      primaryAction="Issue Challan"
+      columns={["Challan #","Fabricator","Issue Date","Items Sent","Expected Return","Status"]}
+      data={[
+  [
+    "CH-2026-8801",
+    "Apex Garments Ltd",
+    "Oct 20, 2026",
+    "500 pcs (Cut)",
+    "Oct 30, 2026",
+    "TRANSIT"
+  ],
+  [
+    "CH-2026-8802",
+    "StitchPerfect Inc",
+    "Oct 15, 2026",
+    "200 pcs (Cut)",
+    "Oct 25, 2026",
+    "COMPLETED"
+  ],
+  [
+    "CH-2026-8803",
+    "City Threads",
+    "Oct 26, 2026",
+    "1200 pcs (Cut)",
+    "Nov 10, 2026",
+    "TRANSIT"
+  ],
+  [
+    "CH-2026-8804",
+    "Apex Garments Ltd",
+    "Sep 01, 2026",
+    "150 pcs (Cut)",
+    "Sep 15, 2026",
+    "COMPLETED"
+  ]
+]}
+    />
   )
 }

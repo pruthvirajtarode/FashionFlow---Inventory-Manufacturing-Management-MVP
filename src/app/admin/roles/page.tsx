@@ -1,13 +1,46 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function RolesPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Roles (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Role Permissions"
+      description="Configure granular RBAC permissions across modules."
+      primaryAction="Create Role"
+      columns={["Role Name","Description","Users Assigned","Access Level","Permissions","Status"]}
+      data={[
+  [
+    "Super Admin",
+    "Full system access",
+    "1",
+    "Global",
+    "BADGE:All",
+    "ACTIVE"
+  ],
+  [
+    "Production Manager",
+    "Manage cutting, routing",
+    "3",
+    "Department",
+    "BADGE:24 Policies",
+    "ACTIVE"
+  ],
+  [
+    "QC Inspector",
+    "Only QC approvals",
+    "5",
+    "Module",
+    "BADGE:5 Policies",
+    "ACTIVE"
+  ],
+  [
+    "Warehouse Staff",
+    "Inventory inward/outward",
+    "8",
+    "Module",
+    "BADGE:8 Policies",
+    "ACTIVE"
+  ]
+]}
+    />
   )
 }

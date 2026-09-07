@@ -1,13 +1,38 @@
-import { AlertCircle } from "lucide-react"
+import { MockPageTemplate } from "@/components/ui/mock-page-template"
 
-export default function FabricPage() {
+export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center h-[80vh] text-center">
-      <AlertCircle className="h-16 w-16 text-slate-400 mb-4" />
-      <h1 className="text-3xl font-bold tracking-tight mb-2">Fabric (Coming Soon)</h1>
-      <p className="text-muted-foreground max-w-md text-lg">
-        This module is currently under development. Please check back later.
-      </p>
-    </div>
+    <MockPageTemplate 
+      title="Fabric Requirement Planning"
+      description="Calculate fabric needs based on production forecasts."
+      primaryAction="Generate PO"
+      columns={["Material / Color","Required For","Total Needed","Current Stock","Shortage","Status"]}
+      data={[
+  [
+    "100% Cotton / Indigo Blue",
+    "PLAN-Q4-01",
+    "2500 m",
+    "1000 m",
+    "BADGE:1500 m",
+    "PENDING"
+  ],
+  [
+    "Fleece / Obsidian",
+    "PLAN-Q4-02",
+    "800 m",
+    "1200 m",
+    "BADGE:0 m",
+    "PASSED"
+  ],
+  [
+    "Linen / White",
+    "PLAN-Q1-05",
+    "5000 m",
+    "500 m",
+    "BADGE:4500 m",
+    "PENDING"
+  ]
+]}
+    />
   )
 }
