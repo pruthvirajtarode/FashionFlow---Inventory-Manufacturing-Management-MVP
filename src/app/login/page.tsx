@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("admin@fashionflow.com")
-  const [password, setPassword] = useState("admin123")
+  const [email, setEmail] = useState("admin@fashionflow.local")
+  const [password, setPassword] = useState("password123")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
