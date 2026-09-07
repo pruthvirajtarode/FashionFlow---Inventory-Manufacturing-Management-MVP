@@ -1,38 +1,22 @@
-import { MockPageTemplate } from "@/components/ui/mock-page-template"
+import { BarcodeScannerForm } from "@/components/ui/barcode-scanner-form"
 
-export default function Page() {
+export default function CheckingPage() {
   return (
-    <MockPageTemplate 
-      title="Checking & Inspection"
-      description="Initial inspection of garments received from stitching."
-      primaryAction="Scan Batch"
-      columns={["Batch Ref","SKU","Total Received","Checked Qty","Passed","Status"]}
-      data={[
-  [
-    "CB-2024-08",
-    "TS-BLU-L",
-    "500",
-    "500",
-    "495",
-    "COMPLETED"
-  ],
-  [
-    "CB-2024-09",
-    "TS-RED-S",
-    "300",
-    "150",
-    "148",
-    "IN PROGRESS"
-  ],
-  [
-    "CB-2024-10",
-    "JK-BLK-XL",
-    "150",
-    "0",
-    "0",
-    "PENDING"
-  ]
-]}
-    />
+    <div className="py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Checking Process</h2>
+          <p className="text-muted-foreground">Scan barcodes to process garments through the checking stage.</p>
+        </div>
+      </div>
+      
+      <BarcodeScannerForm 
+        title="Check Garment"
+        description="Scan the garment barcode to mark it as CHECKED and ready for finishing."
+        expectedCurrentStage="RECEIVED"
+        newStage="CHECKED"
+        allowRemarks={true}
+      />
+    </div>
   )
 }

@@ -1,38 +1,22 @@
-import { MockPageTemplate } from "@/components/ui/mock-page-template"
+import { BarcodeScannerForm } from "@/components/ui/barcode-scanner-form"
 
-export default function Page() {
+export default function FinishingPage() {
   return (
-    <MockPageTemplate 
-      title="Finishing Operations"
-      description="Track washing, ironing, and tagging processes."
-      primaryAction="Update Status"
-      columns={["Batch Ref","Process Type","Assigned To","Qty Input","Qty Output","Status"]}
-      data={[
-  [
-    "CB-2024-08",
-    "Washing & Ironing",
-    "Line A",
-    "495",
-    "495",
-    "COMPLETED"
-  ],
-  [
-    "CB-2024-09",
-    "Ironing & Tagging",
-    "Line B",
-    "148",
-    "50",
-    "IN PROGRESS"
-  ],
-  [
-    "CB-2024-05",
-    "Washing",
-    "Line C",
-    "200",
-    "0",
-    "PENDING"
-  ]
-]}
-    />
+    <div className="py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Finishing Process</h2>
+          <p className="text-muted-foreground">Scan barcodes to process garments through the finishing stage (ironing, tags).</p>
+        </div>
+      </div>
+      
+      <BarcodeScannerForm 
+        title="Finish Garment"
+        description="Scan the garment barcode to mark it as FINISHED and ready for QC."
+        expectedCurrentStage="CHECKED"
+        newStage="FINISHED"
+        allowRemarks={true}
+      />
+    </div>
   )
 }

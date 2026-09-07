@@ -1,46 +1,23 @@
-import { MockPageTemplate } from "@/components/ui/mock-page-template"
+import { BarcodeScannerForm } from "@/components/ui/barcode-scanner-form"
 
-export default function Page() {
+export default function QCPage() {
   return (
-    <MockPageTemplate 
-      title="Quality Control"
-      description="Final stringent quality checks before packing."
-      primaryAction="Log QC Report"
-      columns={["Garment ID","SKU","Inspector","Check Date","Defect Type","Result"]}
-      data={[
-  [
-    "GAR-100452",
-    "TS-BLU-L",
-    "Inspector #4",
-    "Oct 26, 2026",
-    "None",
-    "PASSED"
-  ],
-  [
-    "GAR-100456",
-    "TS-BLU-L",
-    "Inspector #4",
-    "Oct 26, 2026",
-    "Stitching Flaw",
-    "FAILED"
-  ],
-  [
-    "GAR-100457",
-    "JK-BLK-XL",
-    "Inspector #2",
-    "Oct 26, 2026",
-    "None",
-    "PASSED"
-  ],
-  [
-    "GAR-100458",
-    "TS-RED-S",
-    "Inspector #1",
-    "-",
-    "-",
-    "PENDING"
-  ]
-]}
-    />
+    <div className="py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Quality Control (QC)</h2>
+          <p className="text-muted-foreground">Scan barcodes to Pass or Fail garments in Quality Control.</p>
+        </div>
+      </div>
+      
+      <BarcodeScannerForm 
+        title="Quality Control Inspection"
+        description="Inspect the garment. Scan the barcode to PASS, or click Reject to mark as QC_FAILED."
+        expectedCurrentStage="FINISHED"
+        newStage="QC_PASSED"
+        rejectStage="QC_FAILED"
+        allowRemarks={true}
+      />
+    </div>
   )
 }

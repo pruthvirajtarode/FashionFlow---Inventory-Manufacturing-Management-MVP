@@ -1,46 +1,22 @@
-import { MockPageTemplate } from "@/components/ui/mock-page-template"
+import { BarcodeScannerForm } from "@/components/ui/barcode-scanner-form"
 
-export default function Page() {
+export default function PackingPage() {
   return (
-    <MockPageTemplate 
-      title="Packing & Dispatch Prep"
-      description="Group individual garments into cartons for inventory."
-      primaryAction="Create Carton"
-      columns={["Carton ID","SKU","Units Packed","Weight (kg)","Destination","Status"]}
-      data={[
-  [
-    "BOX-00124",
-    "TS-BLU-L",
-    "50",
-    "12.5",
-    "Main Warehouse",
-    "COMPLETED"
-  ],
-  [
-    "BOX-00125",
-    "TS-RED-S",
-    "50",
-    "12.0",
-    "Main Warehouse",
-    "COMPLETED"
-  ],
-  [
-    "BOX-00126",
-    "JK-BLK-XL",
-    "20",
-    "18.2",
-    "Retail Store #1",
-    "TRANSIT"
-  ],
-  [
-    "BOX-00127",
-    "PN-KHK-32",
-    "35",
-    "-",
-    "Pending assignment",
-    "IN PROGRESS"
-  ]
-]}
-    />
+    <div className="py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Packing & Final Inventory</h2>
+          <p className="text-muted-foreground">Scan barcodes to pack garments and move them to final ready stock.</p>
+        </div>
+      </div>
+      
+      <BarcodeScannerForm 
+        title="Pack Garment"
+        description="Scan the garment barcode to mark it as PACKED (Final Inventory). This will increase your ready stock quantity."
+        expectedCurrentStage="QC_PASSED"
+        newStage="FINAL_INVENTORY"
+        allowRemarks={true}
+      />
+    </div>
   )
 }

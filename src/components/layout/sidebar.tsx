@@ -10,7 +10,8 @@ const routes = [
   {
     heading: 'Overview',
     items: [
-      { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard }
+      { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+      { name: 'Barcode Trace', path: '/barcodes/trace', icon: Activity }
     ]
   },
   {

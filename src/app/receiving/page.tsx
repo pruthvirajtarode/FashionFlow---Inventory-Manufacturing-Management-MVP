@@ -1,38 +1,22 @@
-import { MockPageTemplate } from "@/components/ui/mock-page-template"
+import { BarcodeScannerForm } from "@/components/ui/barcode-scanner-form"
 
-export default function Page() {
+export default function ReceivingPage() {
   return (
-    <MockPageTemplate 
-      title="Receiving (Inward)"
-      description="Log inward shipments of stitched garments from fabricators."
-      primaryAction="New Receipt"
-      columns={["Receipt ID","Ref Challan","Fabricator","Received Qty","Shortage/Excess","Status"]}
-      data={[
-  [
-    "RCV-9901",
-    "CH-2026-8802",
-    "StitchPerfect Inc",
-    "198 pcs",
-    "BADGE:-2 pcs",
-    "COMPLETED"
-  ],
-  [
-    "RCV-9902",
-    "CH-2026-8804",
-    "Apex Garments Ltd",
-    "150 pcs",
-    "BADGE:0 pcs",
-    "COMPLETED"
-  ],
-  [
-    "RCV-9903",
-    "CH-2026-8790",
-    "Global Textiles",
-    "405 pcs",
-    "BADGE:+5 pcs",
-    "COMPLETED"
-  ]
-]}
-    />
+    <div className="py-6 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Receiving (Inward)</h2>
+          <p className="text-muted-foreground">Scan barcodes to log inward shipments of stitched garments from fabricators.</p>
+        </div>
+      </div>
+      
+      <BarcodeScannerForm 
+        title="Receive Garment"
+        description="Scan the garment barcode to receive it from the fabricator and mark it for checking."
+        expectedCurrentStage="TRANSIT_OUT"
+        newStage="RECEIVED"
+        allowRemarks={true}
+      />
+    </div>
   )
 }
